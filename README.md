@@ -165,3 +165,7 @@ This project is open source and available for educational and commercial use.
 ---
 
 **Built with ❤️ for SEO professionals and web developers**
+
+## AI-Assisted Development
+
+This project was developed with Cursor as an AI-assisted development environment. AI was used for code review, debugging, and documentation improvement, with changes manually verified before being kept.
