@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI SEO Audit Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🔍 AI SEO Audit Dashboard</h1>
+                    <p class="tagline">Professional SEO Analysis & Recommendations</p>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="#" class="nav-link active">Dashboard</a></li>
+                        <li><a href="#" class="nav-link">History</a></li>
+                        <li><a href="#" class="nav-link">Reports</a></li>
+                        <li><a href="#" class="nav-link">Settings</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="input-container">
+                    <h2>Analyze Your Website</h2>
+                    <form id="auditForm" class="audit-form">
+                        <div class="input-group">
+                            <input 
+                                type="url" 
+                                id="urlInput" 
+                                placeholder="Enter your website URL (e.g., https://example.com)"
+                                required
+                            >
+                            <button type="submit" class="btn btn-primary">Run SEO Audit</button>
+                        </div>
+                        <p class="form-hint">We'll analyze your website's SEO performance and provide actionable recommendations.</p>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state hidden">
+                <div class="loader"></div>
+                <p>Analyzing your website...</p>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="resultsSection" class="results-section hidden">
+                <!-- SEO Score -->
+                <section class="card score-card">
+                    <div class="score-container">
+                        <div class="score-circle">
+                            <span class="score-number" id="overallScore">0</span>
+                            <span class="score-text">Overall Score</span>
+                        </div>
+                        <div class="score-summary">
+                            <h3>SEO Audit Results</h3>
+                            <p id="scoreSummary">Analyzing your website...</p>
+                            <div class="score-breakdown">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Technical SEO</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="technicalProgress"></div>
+                                    </div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">On-Page SEO</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="onPageProgress"></div>
+                                    </div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Performance</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="performanceProgress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Two-Column Layout for Details -->
+                <div class="grid-2">
+                    <!-- Technical SEO -->
+                    <section class="card">
+                        <div class="card-header">
+                            <h3>Technical SEO</h3>
+                            <span class="badge badge-info" id="technicalBadge">8/10</span>
+                        </div>
+                        <ul class="results-list" id="technicalResults">
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>Mobile-friendly design detected</span>
+                            </li>
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>SSL/HTTPS enabled</span>
+                            </li>
+                            <li class="result-item result-warning">
+                                <span class="icon">⚠</span>
+                                <span>Page speed could be improved</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <!-- On-Page SEO -->
+                    <section class="card">
+                        <div class="card-header">
+                            <h3>On-Page SEO</h3>
+                            <span class="badge badge-success" id="onPageBadge">9/10</span>
+                        </div>
+                        <ul class="results-list" id="onPageResults">
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>Meta title optimized</span>
+                            </li>
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>Meta description present</span>
+                            </li>
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>Heading structure is correct</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <!-- Performance -->
+                    <section class="card">
+                        <div class="card-header">
+                            <h3>Performance Metrics</h3>
+                            <span class="badge badge-warning" id="performanceBadge">7/10</span>
+                        </div>
+                        <div class="metrics-list">
+                            <div class="metric-item">
+                                <span class="metric-label">Server Response Time</span>
+                                <span class="metric-value" id="pageLoadTime">2.3s</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">HTML Document Size</span>
+                                <span class="metric-value" id="lcp">1.8s</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Total Images</span>
+                                <span class="metric-value" id="fid">45ms</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Images Missing Alt</span>
+                                <span class="metric-value" id="cls">0.05</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Mobile Friendliness -->
+                    <section class="card">
+                        <div class="card-header">
+                            <h3>Mobile Friendliness</h3>
+                            <span class="badge badge-success" id="mobileBadge">✓</span>
+                        </div>
+                        <ul class="results-list" id="mobileResults">
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>Responsive viewport configured</span>
+                            </li>
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>Touch-friendly button sizes</span>
+                            </li>
+                            <li class="result-item result-pass">
+                                <span class="icon">✓</span>
+                                <span>No mobile usability issues</span>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- Issues & Recommendations -->
+                <section class="card issues-card">
+                    <div class="card-header">
+                        <h3>Issues & Recommendations</h3>
+                        <span class="badge badge-warning" id="issueCount">3</span>
+                    </div>
+                    <div class="issues-container">
+                        <div class="issue-item issue-critical">
+                            <div class="issue-header">
+                                <span class="issue-severity">Critical</span>
+                                <h4>Missing meta descriptions</h4>
+                            </div>
+                            <p class="issue-description">Some pages are missing meta descriptions. Add unique meta descriptions to improve click-through rates from search results.</p>
+                            <p class="issue-recommendation"><strong>Recommendation:</strong> Write compelling meta descriptions (150-160 characters) for all pages.</p>
+                        </div>
+
+                        <div class="issue-item issue-warning">
+                            <div class="issue-header">
+                                <span class="issue-severity">Warning</span>
+                                <h4>Image optimization</h4>
+                            </div>
+                            <p class="issue-description">Images could be better optimized for web. Unoptimized images slow down page load times.</p>
+                            <p class="issue-recommendation"><strong>Recommendation:</strong> Compress images and serve them in modern formats like WebP.</p>
+                        </div>
+
+                        <div class="issue-item issue-info">
+                            <div class="issue-header">
+                                <span class="issue-severity">Info</span>
+                                <h4>Add structured data</h4>
+                            </div>
+                            <p class="issue-description">Your site could benefit from structured data markup to enhance search engine understanding.</p>
+                            <p class="issue-recommendation"><strong>Recommendation:</strong> Implement Schema.org markup for better SERP features.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="newAuditBtn">Run New Audit</button>
+                    <button class="btn btn-secondary" id="downloadReportBtn">Download Report</button>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                    <circle cx="60" cy="60" r="55" stroke="#e5e7eb" stroke-width="2"/>
+                    <path d="M60 35v50M35 60h50" stroke="#9ca3af" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <p>Enter a URL above and click "Run SEO Audit" to get started</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 AI SEO Audit Dashboard. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
