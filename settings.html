@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AI SEO Audit Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🔍 AI SEO Audit Dashboard</h1>
+                    <p class="tagline">Professional SEO Analysis & Recommendations</p>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="index.html" class="nav-link">Dashboard</a></li>
+                        <li><a href="#" class="nav-link">History</a></li>
+                        <li><a href="#" class="nav-link">Reports</a></li>
+                        <li><a href="settings.html" class="nav-link active">Settings</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="input-section">
+                <div class="input-container">
+                    <h2>SEO Audit Settings</h2>
+                    <p class="form-hint">Configure how audits are crawled, analyzed, and reported. Fields marked <span class="required-marker" aria-hidden="true">*</span> <span class="sr-only-text">(required)</span> are required.</p>
+                </div>
+            </section>
+
+            <!-- Global save status, announced to assistive tech -->
+            <div id="saveStatus" class="save-status hidden" role="status" aria-live="polite"></div>
+
+            <form id="settingsForm" class="settings-form" novalidate>
+
+                <!-- Section: Website & Crawl -->
+                <fieldset class="card settings-fieldset">
+                    <legend>Website &amp; Crawl</legend>
+
+                    <div class="form-row">
+                        <label for="websiteUrl">Website URL <span class="required-marker" aria-hidden="true">*</span></label>
+                        <input type="url" id="websiteUrl" name="websiteUrl" placeholder="https://example.com" autocomplete="url" aria-required="true" aria-describedby="websiteUrl-error">
+                        <span id="websiteUrl-error" class="field-error" role="alert"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="crawlFrequency">Crawl frequency <span class="required-marker" aria-hidden="true">*</span></label>
+                        <select id="crawlFrequency" name="crawlFrequency" aria-required="true">
+                            <option value="daily">Daily</option>
+                            <option value="weekly" selected>Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="crawlDepth">Crawl depth (1-10 pages deep) <span class="required-marker" aria-hidden="true">*</span></label>
+                        <input type="number" id="crawlDepth" name="crawlDepth" min="1" max="10" step="1" value="3" aria-required="true" aria-describedby="crawlDepth-error crawlDepth-hint">
+                        <span id="crawlDepth-hint" class="field-hint">Enter a whole number between 1 and 10.</span>
+                        <span id="crawlDepth-error" class="field-error" role="alert"></span>
+                    </div>
+
+                    <div class="form-row toggle-row">
+                        <label class="toggle-label" for="includeSubdomains">
+                            <input type="checkbox" id="includeSubdomains" name="includeSubdomains" class="toggle-input">
+                            <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                            <span class="toggle-text">Include subdomains</span>
+                        </label>
+                        <span class="toggle-state" data-for="includeSubdomains">Off</span>
+                    </div>
+
+                    <div class="form-row toggle-row">
+                        <label class="toggle-label" for="respectRobots">
+                            <input type="checkbox" id="respectRobots" name="respectRobots" class="toggle-input" checked>
+                            <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                            <span class="toggle-text">Respect robots.txt</span>
+                        </label>
+                        <span class="toggle-state" data-for="respectRobots">On</span>
+                    </div>
+                </fieldset>
+
+                <!-- Section: AI Analysis -->
+                <fieldset class="card settings-fieldset">
+                    <legend>AI Analysis</legend>
+
+                    <div class="form-row">
+                        <label for="aiModel">AI model selection <span class="required-marker" aria-hidden="true">*</span></label>
+                        <select id="aiModel" name="aiModel" aria-required="true">
+                            <option value="claude-sonnet-5" selected>Claude Sonnet 5 (balanced)</option>
+                            <option value="claude-opus-4-8">Claude Opus 4.8 (deep analysis)</option>
+                            <option value="claude-haiku-4-5">Claude Haiku 4.5 (fast)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="qualityThreshold">Content quality threshold: <output id="qualityThresholdValue" for="qualityThreshold">70</output>%</label>
+                        <input type="range" id="qualityThreshold" name="qualityThreshold" min="0" max="100" step="5" value="70" aria-describedby="qualityThreshold-hint">
+                        <span id="qualityThreshold-hint" class="field-hint">Pages scoring below this threshold are flagged as low quality.</span>
+                    </div>
+
+                    <div class="form-row">
+                        <span class="group-label" id="keywordsLabel">Focus keywords</span>
+                        <ul class="dynamic-list" id="keywordsList" aria-labelledby="keywordsLabel"></ul>
+                        <div class="dynamic-add-row">
+                            <label for="keywordInput" class="sr-only-text">New focus keyword</label>
+                            <input type="text" id="keywordInput" placeholder="e.g. local seo services">
+                            <button type="button" class="btn btn-secondary" id="addKeywordBtn">Add keyword</button>
+                        </div>
+                        <span id="keywords-error" class="field-error" role="alert"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <span class="group-label" id="competitorsLabel">Competitor URLs</span>
+                        <ul class="dynamic-list" id="competitorsList" aria-labelledby="competitorsLabel"></ul>
+                        <div class="dynamic-add-row">
+                            <label for="competitorInput" class="sr-only-text">New competitor URL</label>
+                            <input type="url" id="competitorInput" placeholder="https://competitor.com">
+                            <button type="button" class="btn btn-secondary" id="addCompetitorBtn">Add competitor</button>
+                        </div>
+                        <span id="competitors-error" class="field-error" role="alert"></span>
+                    </div>
+                </fieldset>
+
+                <!-- Section: Notifications -->
+                <fieldset class="card settings-fieldset">
+                    <legend>Notifications</legend>
+
+                    <div class="form-row">
+                        <label for="alertEmail">Alert email</label>
+                        <input type="email" id="alertEmail" name="alertEmail" placeholder="you@example.com" autocomplete="email" aria-describedby="alertEmail-error alertEmail-hint">
+                        <span id="alertEmail-hint" class="field-hint">Optional. Used for critical issue alerts and weekly summaries.</span>
+                        <span id="alertEmail-error" class="field-error" role="alert"></span>
+                    </div>
+
+                    <div class="form-row toggle-row">
+                        <label class="toggle-label" for="criticalAlerts">
+                            <input type="checkbox" id="criticalAlerts" name="criticalAlerts" class="toggle-input" checked>
+                            <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                            <span class="toggle-text">Critical issue alerts</span>
+                        </label>
+                        <span class="toggle-state" data-for="criticalAlerts">On</span>
+                    </div>
+
+                    <div class="form-row toggle-row">
+                        <label class="toggle-label" for="weeklySummary">
+                            <input type="checkbox" id="weeklySummary" name="weeklySummary" class="toggle-input" checked>
+                            <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                            <span class="toggle-text">Weekly summary</span>
+                        </label>
+                        <span class="toggle-state" data-for="weeklySummary">On</span>
+                    </div>
+                </fieldset>
+
+                <!-- Section: Integrations -->
+                <fieldset class="card settings-fieldset">
+                    <legend>Integrations</legend>
+
+                    <div class="form-row">
+                        <label for="apiKey">API key</label>
+                        <div class="input-with-button">
+                            <input type="password" id="apiKey" name="apiKey" placeholder="Enter API key" autocomplete="new-password" aria-describedby="apiKey-hint">
+                            <button type="button" class="btn btn-secondary icon-btn" id="toggleApiKeyBtn" aria-pressed="false" aria-label="Show API key">
+                                <span aria-hidden="true">👁</span>
+                            </button>
+                        </div>
+                        <span id="apiKey-hint" class="field-hint">Hidden by default. Used to authenticate audit requests.</span>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="webhookUrl">Webhook URL</label>
+                        <input type="url" id="webhookUrl" name="webhookUrl" placeholder="https://your-app.com/webhook" aria-describedby="webhookUrl-error">
+                        <span id="webhookUrl-error" class="field-error" role="alert"></span>
+                    </div>
+                </fieldset>
+
+                <!-- Section: Reporting -->
+                <fieldset class="card settings-fieldset">
+                    <legend>Reporting</legend>
+
+                    <div class="form-row">
+                        <label for="reportFormat">Report format <span class="required-marker" aria-hidden="true">*</span></label>
+                        <select id="reportFormat" name="reportFormat" aria-required="true">
+                            <option value="html" selected>HTML</option>
+                            <option value="pdf">PDF</option>
+                            <option value="csv">CSV</option>
+                            <option value="json">JSON</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row toggle-row">
+                        <label class="toggle-label" for="pageScreenshots">
+                            <input type="checkbox" id="pageScreenshots" name="pageScreenshots" class="toggle-input">
+                            <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                            <span class="toggle-text">Page screenshots</span>
+                        </label>
+                        <span class="toggle-state" data-for="pageScreenshots">Off</span>
+                    </div>
+
+                    <div class="form-row toggle-row">
+                        <label class="toggle-label" for="whiteLabel">
+                            <input type="checkbox" id="whiteLabel" name="whiteLabel" class="toggle-input">
+                            <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                            <span class="toggle-text">White-label branding</span>
+                        </label>
+                        <span class="toggle-state" data-for="whiteLabel">Off</span>
+                    </div>
+                </fieldset>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+                    <button type="button" class="btn btn-secondary" id="resetSettingsBtn">Reset to Defaults</button>
+                </div>
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 AI SEO Audit Dashboard. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
