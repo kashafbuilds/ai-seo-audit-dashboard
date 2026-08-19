@@ -142,3 +142,22 @@ Before marking any task done:
 ## Working Style
 
 When unsure about a change that affects scoring, layout, or the API contract, ask the user before proceeding. Match the tone and structure of existing code — this project favors straightforward, readable vanilla JS over clever abstractions.
+
+## Lessons Learned from AI-Assisted Workflow
+
+### 4. Match the existing frontend architecture
+- Inspect the repository's actual stack and existing file structure before generating frontend code.
+- This project uses vanilla HTML, CSS, and JavaScript.
+- Do not create JSX, React components, or framework-specific frontend files unless explicitly requested.
+
+### 5. Verify file-level constraints before implementation
+- Read the relevant project instructions and existing files before writing code.
+- Reuse existing CSS variables, class naming patterns, and project conventions.
+- Keep feature changes focused and avoid unrelated file changes.
+
+### 6. Verify behavior, not just generated code
+- Run and test the feature after implementation.
+- For forms, verify required-field validation, invalid input handling, interactive controls, save/reset behavior, and persistence.
+- Verify the implementation against the project constraints before committing.
+
+These rules are based on the Round 1 vs Round 2 workflow: Round 1 incorrectly produced a JSX file even though this repository uses vanilla HTML/CSS/JavaScript, while Round 2 corrected this by using settings.html, settings.css, and settings.js.
