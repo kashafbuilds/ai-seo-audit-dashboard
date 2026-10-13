@@ -4,6 +4,7 @@ import { generateText } from "ai";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 
+export const maxDuration = 30;
 const redis = Redis.fromEnv();
 
 const ratelimit = new Ratelimit({
@@ -349,7 +350,7 @@ Rules:
 `;
 
     const result = await generateText({
-      model: google("gemini-3.5-flash-lite"),
+      model: google("gemini-3.8-flash"),
       prompt,
       maxOutputTokens: 1000,
     });
