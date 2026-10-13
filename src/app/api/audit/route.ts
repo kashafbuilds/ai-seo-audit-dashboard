@@ -349,23 +349,39 @@ Rules:
 `;
 
     const result = await generateText({
-      model: google("gemini-3.6-flash"),
+      model: google("gemini-3.5-flash-lite"),
       prompt,
       maxOutputTokens: 1000,
     });
 
-    let parsedAudit: unknown;
+let parsedAudit: unknown;
 
-    try {
-      parsedAudit = JSON.parse(result.text.trim());
-    } catch {
-      console.error("Invalid AI response:", result.text);
+try {
+  // Remove optional Markdown code fences.
+  const cleanedText = result.text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/, "")
+    .trim();
 
-      return Response.json(
-        { error: "AI returned an invalid response. Please try again." },
-        { status: 502 }
-      );
-    }
+  // Extract the JSON object if Gemini adds extra text.
+  const firstBrace = cleanedText.indexOf("{");
+  const lastBrace = cleanedText.lastIndexOf("}");
+
+  if (firstBrace === -1 || lastBrace <= firstBrace) {
+    throw new Error("No complete JSON object found.");
+  }
+
+  const jsonText = cleanedText.slice(firstBrace, lastBrace + 1);
+  parsedAudit = JSON.parse(jsonText);
+} catch (error) {
+  console.error("Invalid AI response:", error);
+
+  return Response.json(
+    { error: "AI returned an invalid response. Please try again." },
+    { status: 502 }
+  );
+}
 
     if (
       !parsedAudit ||
